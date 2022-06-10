@@ -61,3 +61,41 @@ async def skip_book(skip_book: Optional[str] = None):
         return new_books
     return BOOKS
 
+
+@app.post("/create_book")
+async def create_book(book_title, book_author):
+    current_book_id = 0
+    if len(BOOKS) > 0:
+        for book in BOOKS:
+            x = int(book.split('_')[-1])
+            if x > current_book_id:
+                current_book_id = x
+    BOOKS[f'book_{current_book_id + 1}'] = {'title': book_title, 'author': book_author}
+    return BOOKS[f'book_{current_book_id + 1}']
+
+
+@app.put('/{book_name}')
+async def update_book(book_name: str, book_title: str, book_author: str):
+    """Updates a book based on the name. Name is a parameter whereas book title and author name is query."""
+    book_information = {'title': book_title, 'author': book_author}
+    BOOKS[book_name] = book_information
+    return book_information
+
+
+@app.delete('/books/{book_name}')
+async def book_delete(book_name: str):
+    """Deletes a book based on the name query"""
+    del BOOKS[book_name]
+    return BOOKS
+
+
+@app.get('/books/')
+async def read_book_query(book_name: str):
+    return BOOKS[book_name]
+
+
+@app.delete(('/books/delete/'))
+async def delete_book_query(book_name: str):
+    del BOOKS[book_name]
+    return BOOKS
+
