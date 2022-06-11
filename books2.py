@@ -1,5 +1,5 @@
 from typing import Optional
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, status
 from pydantic import BaseModel, Field
 from uuid import UUID
 from starlette.responses import JSONResponse
@@ -134,7 +134,7 @@ async def delete_book(book_id: UUID):
     raise raise_item_not_found_exception()
 
 
-@app.post('/create')
+@app.post('/create', status_code=status.HTTP_201_CREATED)
 async def create_book(book: Book):  # argument name: Model Name(type)
     BOOKS.append(book)
     return book
